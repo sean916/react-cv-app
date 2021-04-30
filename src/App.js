@@ -9,6 +9,10 @@ class App extends Component {
   constructor() {
     super()
 
+    // this.handleEmpSubmit = this.handleEmpSubmit.bind(this);
+    // this.handleJobSubmit = this.handleJobSubmit.bind(this);
+    // this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
+
     this.state = {
       Gen: {
         editMode: true,
@@ -36,48 +40,227 @@ class App extends Component {
         jobs: [],
         editMode: true
       }
-
     }
+
   }
 
   // Employment functions here
 
+
   handleEmpSubmit = (e) => {
     e.preventDefault();
-    this.setState({
-      Emp: {
-        editMode: !this.state.Emp.editMode,
-        job: {
-          companyName: '',
-          positionTitle: '',
-          task: { text: '', id: uniqid() },
-          tasks: [],
-          startDate: '',
-          endDate: '',
-          id: uniqid()
-        },
-        jobs: this.state.Emp.jobs
-      }
-    })
+    
+    // Unhandled Task Submit
+    if (this.state.Emp.job.task.text !== '') {
+      this.setState({
+        Emp: {
+          job: {
+            companyName: this.state.Emp.job.companyName,
+            positionTitle: this.state.Emp.job.positionTitle,
+            tasks: [...this.state.Emp.job.tasks, this.state.Emp.job.task],
+            task: { text: '', id: uniqid() },
+            startDate: this.state.Emp.job.startDate,
+            endDate: this.state.Emp.job.endDate,
+            id: this.state.Emp.job.id
+          },
+          jobs: this.state.Emp.jobs,
+          editMode: this.state.Emp.editMode
+        }
+      }, () => {
+        // Unhandled Job Submit
+        if (this.state.Emp.job.companyName !== '') {
+          this.setState({
+            Emp: {
+              editMode: this.state.Emp.editMode,
+              jobs: this.state.Emp.jobs.concat(this.state.Emp.job),
+              job: {
+                companyName: '',
+                positionTitle: '',
+                task: { text: '', id: uniqid() },
+                tasks: [],
+                startDate: '',
+                endDate: '',
+                id: uniqid()
+              }
+            }
+          }, () => {
+            
+            // Handle Employment Submit
+            this.setState({
+              Emp: {
+                editMode: !this.state.Emp.editMode,
+                job: {
+                  companyName: '',
+                  positionTitle: '',
+                  task: { text: '', id: uniqid() },
+                  tasks: [],
+                  startDate: '',
+                  endDate: '',
+                  id: uniqid()
+                },
+                jobs: this.state.Emp.jobs
+              }
+            })
+
+          })
+        }
+
+      });
+    } else if (this.state.Emp.job.companyName !== '') {
+      this.setState({
+        Emp: {
+          editMode: this.state.Emp.editMode,
+          jobs: this.state.Emp.jobs.concat(this.state.Emp.job),
+          job: {
+            companyName: '',
+            positionTitle: '',
+            task: { text: '', id: uniqid() },
+            tasks: [],
+            startDate: '',
+            endDate: '',
+            id: uniqid()
+          }
+        }
+      }, () => {
+        
+        // Handle Employment Submit
+        this.setState({
+          Emp: {
+            editMode: !this.state.Emp.editMode,
+            job: {
+              companyName: '',
+              positionTitle: '',
+              task: { text: '', id: uniqid() },
+              tasks: [],
+              startDate: '',
+              endDate: '',
+              id: uniqid()
+            },
+            jobs: this.state.Emp.jobs
+          }
+        })
+
+      })
+    } else {
+      this.setState({
+        Emp: {
+          editMode: !this.state.Emp.editMode,
+          job: {
+            companyName: '',
+            positionTitle: '',
+            task: { text: '', id: uniqid() },
+            tasks: [],
+            startDate: '',
+            endDate: '',
+            id: uniqid()
+          },
+          jobs: this.state.Emp.jobs
+        }
+      })
+    }
   }
 
   handleJobSubmit = (e) => {
     e.preventDefault();
+
+    // Add Unhandled Task
+    if (this.state.Emp.job.task.text !== '') {
+      this.setState({
+        Emp: {
+          job: {
+            companyName: this.state.Emp.job.companyName,
+            positionTitle: this.state.Emp.job.positionTitle,
+            tasks: [...this.state.Emp.job.tasks, this.state.Emp.job.task],
+            task: { text: '', id: uniqid() },
+            startDate: this.state.Emp.job.startDate,
+            endDate: this.state.Emp.job.endDate,
+            id: this.state.Emp.job.id
+          },
+          jobs: this.state.Emp.jobs,
+          editMode: this.state.Emp.editMode
+        }
+      }, () => {
+        
+        // Add Job
+        this.setState({
+          Emp: {
+            editMode: this.state.Emp.editMode,
+            jobs: this.state.Emp.jobs.concat(this.state.Emp.job),
+            job: {
+              companyName: '',
+              positionTitle: '',
+              task: { text: '', id: uniqid() },
+              tasks: [],
+              startDate: '',
+              endDate: '',
+              id: uniqid()
+            }
+          }
+        })
+
+      });
+
+      // No unhandled Task, Just Add Job
+    } else if (this.state.Emp.job.companyName !== '') {
+      this.setState({
+        Emp: {
+          editMode: this.state.Emp.editMode,
+          jobs: this.state.Emp.jobs.concat(this.state.Emp.job),
+          job: {
+            companyName: '',
+            positionTitle: '',
+            task: { text: '', id: uniqid() },
+            tasks: [],
+            startDate: '',
+            endDate: '',
+            id: uniqid()
+          }
+        }
+      })
+    }
+  }
+
+  handleTaskSubmit = (e) => {
+    e.preventDefault();
+    if (this.state.Emp.job.task.text !== '') {
+      this.setState({
+        Emp: {
+          job: {
+            companyName: this.state.Emp.job.companyName,
+            positionTitle: this.state.Emp.job.positionTitle,
+            tasks: [...this.state.Emp.job.tasks, this.state.Emp.job.task],
+            task: { text: '', id: uniqid() },
+            startDate: this.state.Emp.job.startDate,
+            endDate: this.state.Emp.job.endDate,
+            id: this.state.Emp.job.id
+          },
+          jobs: this.state.Emp.jobs,
+          editMode: this.state.Emp.editMode
+        }
+      }, () => {
+        console.log(this.state.Emp.job.tasks)
+      });
+    }
+  }
+
+  handleTaskChange = (e) => {
+    e.preventDefault();
     this.setState({
       Emp: {
-        editMode: this.state.Emp.editMode,
-        jobs: this.state.Emp.jobs.concat(this.state.Emp.job),
         job: {
-          companyName: '',
-          positionTitle: '',
-          task: { text: '', id: uniqid() },
-          tasks: [],
-          startDate: '',
-          endDate: '',
-          id: uniqid()
-        }
+          companyName: this.state.Emp.job.companyName,
+          positionTitle: this.state.Emp.job.positionTitle,
+          task: { text: e.target.value, id: this.state.Emp.job.task.id},
+          tasks: this.state.Emp.job.tasks,
+          startDate: this.state.Emp.job.startDate,
+          endDate: this.state.Emp.job.endDate,
+          id: this.state.Emp.job.id
+        },
+        jobs: this.state.Emp.jobs,
+        editMode: this.state.Emp.editMode
       }
     })
+    console.log(this.state.Emp.job)
   }
 
   handleEndDateChange = (e) => {
@@ -109,44 +292,6 @@ class App extends Component {
           task: { text: this.state.Emp.job.task.text, id: this.state.Emp.job.task.id},
           tasks: this.state.Emp.job.tasks,
           startDate: e.target.value,
-          endDate: this.state.Emp.job.endDate,
-          id: this.state.Emp.job.id
-        },
-        jobs: this.state.Emp.jobs,
-        editMode: this.state.Emp.editMode
-      }
-    })
-  }
-
-  handleTaskSubmit = (e) => {
-    e.preventDefault();
-    this.setState({
-      Emp: {
-        job: {
-          companyName: this.state.Emp.job.companyName,
-          positionTitle: this.state.Emp.job.positionTitle,
-          tasks: this.state.Emp.job.tasks.concat(this.state.Emp.job.task),
-          task: { text: '', id: uniqid() },
-          startDate: this.state.Emp.job.startDate,
-          endDate: e.target.value,
-          id: this.state.Emp.job.id
-        },
-        jobs: this.state.Emp.jobs,
-        editMode: this.state.Emp.editMode
-      }
-    })
-  }
-
-  handleTaskChange = (e) => {
-    e.preventDefault();
-    this.setState({
-      Emp: {
-        job: {
-          companyName: this.state.Emp.job.companyName,
-          positionTitle: this.state.Emp.job.positionTitle,
-          task: { text: e.target.value, id: this.state.Emp.job.task.id},
-          tasks: this.state.Emp.job.tasks,
-          startDate: this.state.Emp.job.startDate,
           endDate: this.state.Emp.job.endDate,
           id: this.state.Emp.job.id
         },
